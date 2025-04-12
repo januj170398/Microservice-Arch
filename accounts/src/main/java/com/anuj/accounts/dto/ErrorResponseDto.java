@@ -6,10 +6,17 @@ import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
-@Data@AllArgsConstructor
+@Data
 public class ErrorResponseDto {
     private String apiPath;
     private LocalDateTime errorTime;
     private HttpStatus errorCode;
     private String errorMessage;
+
+    public ErrorResponseDto(String apiPath, LocalDateTime errorTime, HttpStatus errorCode, String errorMessage) {
+        this.apiPath = apiPath;
+        this.errorTime = errorTime;
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
 }

@@ -6,6 +6,7 @@ import com.anuj.accounts.entity.Accounts;
 import com.anuj.accounts.entity.Customer;
 
 public class CustomerMapper {
+
     public static CustomerDto mapToCustomerDto(Customer customer, CustomerDto customerDto) {
         customerDto.setName(customer.getName());
         customerDto.setEmail(customer.getEmail());

@@ -8,7 +8,10 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
-@Getter@Setter@ToString@MappedSuperclass
+@Getter
+@Setter
+@ToString
+@MappedSuperclass
 public class BaseEntity {
 
     @Column(updatable = false)

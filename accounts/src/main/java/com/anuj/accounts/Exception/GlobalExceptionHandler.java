@@ -1,6 +1,7 @@
 package com.anuj.accounts.Exception;
 
 import com.anuj.accounts.dto.ErrorResponseDto;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -22,12 +23,52 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(CustomerAlreadyExistException.class)
     public ResponseEntity<ErrorResponseDto> handleCustomerAlreadyExistException(CustomerAlreadyExistException exception, WebRequest webRequest) {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(
-            webRequest.getDescription(false),
-            LocalDateTime.now(),
-            HttpStatus.BAD_REQUEST,
-            exception.getMessage()
+                webRequest.getDescription(false),
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST,
+                exception.getMessage()
         );
         return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(ResourceNotFoundException exception, WebRequest webRequest) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                LocalDateTime.now(),
+                HttpStatus.NOT_FOUND,
+                exception.getMessage()
+        );
+        return new ResponseEntity<>(errorResponseDto, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorResponseDto> handleDataIntegrityViolationException(DataIntegrityViolationException exception, WebRequest webRequest) {
+        String errorMessage = "Data integrity violation: ";
+        if (exception.getMostSpecificCause() != null) {
+            errorMessage += exception.getMostSpecificCause().getMessage();
+        } else {
+            errorMessage += "Please check your input data";
+        }
+        
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                LocalDateTime.now(),
+                HttpStatus.BAD_REQUEST,
+                errorMessage
+        );
+        return new ResponseEntity<>(errorResponseDto, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleGlobalException(Exception exception, WebRequest webRequest) {
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(
+                webRequest.getDescription(false),
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR,
+                exception.getMessage()
+        );
+        return new ResponseEntity<>(errorResponseDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @Override
