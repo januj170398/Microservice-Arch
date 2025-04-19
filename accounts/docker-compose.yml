@@ -1,0 +1,10 @@
+services:
+    accounts:
+      image: "anuj1703978/accounts:s4"
+      container_name: accounts-ms
+      ports:
+        - "8081:8081"
+      deploy:
+        resources:
+          limits:
+            memory: 700m

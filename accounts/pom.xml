@@ -11,8 +11,9 @@
 	<groupId>com.anuj</groupId>
 	<artifactId>accounts</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Accounts</name>
-	<description>Demo project for Spring Boot</description>
+	<packaging>jar</packaging>
+	<name>accounts</name>
+	<description>Microservice for Accounts</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -98,6 +99,16 @@
 							<version>${lombok.version}</version>
 						</path>
 					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.4.5</version>
+				<configuration>
+					<to>
+						<image>anuj1703978/${project.artifactId}:s6</image>
+					</to>
 				</configuration>
 			</plugin>
 			<plugin>
