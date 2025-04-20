@@ -7,6 +7,7 @@ com\anuj\cards\repository\CardsRepository.class
 com\anuj\cards\controller\CardsController.class
 com\anuj\cards\entity\BaseEntity.class
 com\anuj\cards\exception\ResourceNotFoundException.class
+com\anuj\cards\dto\CardsContactInfoDto.class
 com\anuj\cards\audit\AuditAwareImpl.class
 com\anuj\cards\service\ICardsService.class
 com\anuj\cards\dto\ResponseDto.class

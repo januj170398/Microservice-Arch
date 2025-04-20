@@ -1,35 +1,16 @@
-server:
-  port: 8090
 spring:
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: ''
-  h2:
-    console:
-      enabled: true
-  jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
-    hibernate:
-      ddl-auto: update
-    show-sql: true
   config:
-    import:
-      - "application_qa.yml"
-      - "application_prod.yml"
-  profiles:
-    active:
-      - "qa"
+    activate:
+      on-profile: "qa"
 
 build:
-  version: "3.0"
+  version: "2.0"
 
-loans:
-  message: "Welcome to EazyBank loans related local APIs "
+cards:
+  message: "Welcome to EazyBank cards related QA APIs "
   contactDetails:
-    name: "Amaal Grega - Developer"
-    email: "amaal@eazybank.com"
+    name: "Cherryl Pankaj - QA Lead"
+    email: "cherryl@eazybank.com"
   onCallSupport:
-    - (452) 456-2176
-    - (546) 764-8934
+    - (310) 875-4367
+    - (201) 236-1267

@@ -1,16 +1,23 @@
 package com.anuj.cards.controller;
 
 import com.anuj.cards.constants.CardsConstants;
+import com.anuj.cards.dto.CardsContactInfoDto;
 import com.anuj.cards.dto.CardsDto;
+import com.anuj.cards.dto.ErrorResponseDto;
 import com.anuj.cards.dto.ResponseDto;
 import com.anuj.cards.service.ICardsService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,20 +25,32 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(
-        name = "CRUD REST APIs for Cards",
-        description = "CRUD REST APIs to CREATE, UPDATE, FETCH AND DELETE card details"
+        name = "CRUD REST APIs for Cards in EazyBank",
+        description = "CRUD REST APIs in EazyBank to CREATE, UPDATE, FETCH AND DELETE card details"
 )
 @RestController
-@RequestMapping(path = "/api/cards", produces = {MediaType.APPLICATION_JSON_VALUE})
-@AllArgsConstructor
+@RequestMapping(path = "/api", produces = {MediaType.APPLICATION_JSON_VALUE})
 @Validated
 public class CardsController {
 
     private ICardsService iCardsService;
 
+    public CardsController(ICardsService iCardsService) {
+        this.iCardsService = iCardsService;
+    }
+
+    @Value("${build.version}")
+    private String buildVersion;
+
+    @Autowired
+    private Environment environment;
+
+    @Autowired
+    private CardsContactInfoDto cardsContactInfoDto;
+
     @Operation(
             summary = "Create Card REST API",
-            description = "REST API to create new Card"
+            description = "REST API to create new Card inside EazyBank"
     )
     @ApiResponses({
             @ApiResponse(
@@ -40,13 +59,17 @@ public class CardsController {
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "HTTP Status Internal Server Error"
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
             )
-    })
+    }
+    )
     @PostMapping("/create")
     public ResponseEntity<ResponseDto> createCard(@Valid @RequestParam
-                                                @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
-                                                String mobileNumber) {
+                                                  @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+                                                  String mobileNumber) {
         iCardsService.createCard(mobileNumber);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -55,7 +78,7 @@ public class CardsController {
 
     @Operation(
             summary = "Fetch Card Details REST API",
-            description = "REST API to fetch card details based on mobile number"
+            description = "REST API to fetch card details based on a mobile number"
     )
     @ApiResponses({
             @ApiResponse(
@@ -64,20 +87,23 @@ public class CardsController {
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "HTTP Status Internal Server Error"
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
             )
     })
     @GetMapping("/fetch")
     public ResponseEntity<CardsDto> fetchCardDetails(@RequestParam
-                                                   @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
-                                                   String mobileNumber) {
+                                                     @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+                                                     String mobileNumber) {
         CardsDto cardsDto = iCardsService.fetchCard(mobileNumber);
         return ResponseEntity.status(HttpStatus.OK).body(cardsDto);
     }
 
     @Operation(
             summary = "Update Card Details REST API",
-            description = "REST API to update card details based on card number"
+            description = "REST API to update card details based on a card number"
     )
     @ApiResponses({
             @ApiResponse(
@@ -90,7 +116,10 @@ public class CardsController {
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "HTTP Status Internal Server Error"
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
             )
     })
     @PutMapping("/update")
@@ -109,7 +138,7 @@ public class CardsController {
 
     @Operation(
             summary = "Delete Card Details REST API",
-            description = "REST API to delete Card details based on mobile number"
+            description = "REST API to delete Card details based on a mobile number"
     )
     @ApiResponses({
             @ApiResponse(
@@ -122,13 +151,16 @@ public class CardsController {
             ),
             @ApiResponse(
                     responseCode = "500",
-                    description = "HTTP Status Internal Server Error"
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
             )
     })
     @DeleteMapping("/delete")
     public ResponseEntity<ResponseDto> deleteCardDetails(@RequestParam
-                                                       @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
-                                                       String mobileNumber) {
+                                                         @Pattern(regexp="(^$|[0-9]{10})",message = "Mobile number must be 10 digits")
+                                                         String mobileNumber) {
         boolean isDeleted = iCardsService.deleteCard(mobileNumber);
         if(isDeleted) {
             return ResponseEntity
@@ -140,4 +172,80 @@ public class CardsController {
                     .body(new ResponseDto(CardsConstants.STATUS_417, CardsConstants.MESSAGE_417_DELETE));
         }
     }
+
+    @Operation(
+            summary = "Get Build information",
+            description = "Get Build information that is deployed into cards microservice"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/build-info")
+    public ResponseEntity<String> getBuildInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(buildVersion);
+    }
+
+    @Operation(
+            summary = "Get Java version",
+            description = "Get Java versions details that is installed into cards microservice"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/java-version")
+    public ResponseEntity<String> getJavaVersion() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(environment.getProperty("JAVA_HOME"));
+    }
+
+    @Operation(
+            summary = "Get Contact Info",
+            description = "Contact Info details that can be reached out in case of any issues"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "HTTP Status OK"
+            ),
+            @ApiResponse(
+                    responseCode = "500",
+                    description = "HTTP Status Internal Server Error",
+                    content = @Content(
+                            schema = @Schema(implementation = ErrorResponseDto.class)
+                    )
+            )
+    }
+    )
+    @GetMapping("/contact-info")
+    public ResponseEntity<CardsContactInfoDto> getContactInfo() {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(cardsContactInfoDto);
+    }
+
 }
