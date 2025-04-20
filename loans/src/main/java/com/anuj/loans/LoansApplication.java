@@ -11,32 +11,27 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
-@SpringBootApplication
-/*@ComponentScans({ @ComponentScan("com.eazybytes.loans.controller") })
-@EnableJpaRepositories("com.eazybytes.loans.repository")
-@EntityScan("com.eazybytes.loans.model")*/
-@EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
-@EnableConfigurationProperties(value = {LoansContactInfoDto.class})
 @OpenAPIDefinition(
         info = @Info(
                 title = "Loans microservice REST API Documentation",
                 description = "EazyBank Loans microservice REST API Documentation",
                 version = "v1",
                 contact = @Contact(
-                        name = "Madan Reddy",
-                        email = "tutor@eazybytes.com",
-                        url = "https://www.eazybytes.com"
+                        name = "Anuj Jain",
+                        email = "anuj@example.com"
                 ),
                 license = @License(
-                        name = "Apache 2.0",
-                        url = "https://www.eazybytes.com"
+                        name = "Apache 2.0"
                 )
         ),
         externalDocs = @ExternalDocumentation(
                 description = "EazyBank Loans microservice REST API Documentation",
-                url = "https://www.eazybytes.com/swagger-ui.html"
+                url = "https://www.eazybank.com/swagger-ui.html"
         )
 )
+@EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
+@EnableConfigurationProperties(value = {LoansContactInfoDto.class})
+@SpringBootApplication
 public class LoansApplication {
 
     public static void main(String[] args) {

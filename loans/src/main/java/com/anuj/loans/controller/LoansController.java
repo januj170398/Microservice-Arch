@@ -195,11 +195,11 @@ public class LoansController {
     )
     @GetMapping("/build-info")
     public ResponseEntity<String> getBuildInfo() {
+        System.out.println("Hit build-info endpoint");
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(buildVersion);
     }
-
     @Operation(
             summary = "Get Java version",
             description = "Get Java versions details that is installed into cards microservice"
